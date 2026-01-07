@@ -35,33 +35,49 @@ export default function ConciergeDemandeDetailPage() {
 
   useEffect(() => {
     const loadData = async () => {
-      const supabase = createClient()
+      const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
+      const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      const headers = {
+        'apikey': key,
+        'Authorization': `Bearer ${key}`,
+        'Content-Type': 'application/json'
+      }
 
-      const { data: requestData } = await supabase
-        .from('requests')
-        .select(
-          `
-          *,
-          category:categories(*),
-          service:services(*),
-          player:profiles!requests_player_id_fkey(*)
-        `
-        )
-        .eq('id', params.id)
-        .single()
+      // Get request with categories and services
+      const response = await fetch(
+        `${url}/rest/v1/requests?select=*,category:categories(*),service:services(*)&id=eq.${params.id}`,
+        { headers }
+      )
 
-      if (requestData) {
-        setRequest(requestData)
+      const data = await response.json()
+
+      if (response.ok && Array.isArray(data) && data.length > 0) {
+        const requestData = data[0]
+
+        // Fetch player profile
+        if (requestData.player_id) {
+          const profileResponse = await fetch(
+            `${url}/rest/v1/profiles?select=*&id=eq.${requestData.player_id}`,
+            { headers }
+          )
+          const profiles = await profileResponse.json()
+          if (profiles && profiles.length > 0) {
+            requestData.player = profiles[0]
+          }
+        }
+
+        setRequest(requestData as RequestWithDetails)
         setInternalNote(requestData.internal_notes || '')
       }
 
-      const { data: messagesData } = await supabase
-        .from('messages')
-        .select('*')
-        .eq('request_id', params.id)
-        .order('created_at', { ascending: true })
+      // Fetch messages
+      const messagesResponse = await fetch(
+        `${url}/rest/v1/messages?select=*&request_id=eq.${params.id}&order=created_at.asc`,
+        { headers }
+      )
+      const messagesData = await messagesResponse.json()
 
-      if (messagesData) {
+      if (messagesResponse.ok && Array.isArray(messagesData)) {
         setMessages(messagesData)
       }
 

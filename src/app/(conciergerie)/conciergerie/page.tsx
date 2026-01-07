@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { getCategoryIcon, ChevronRight, Clock, FileText, Users } from '@/components/ui/icons'
 import { formatRelativeTime } from '@/lib/utils'
@@ -22,31 +21,58 @@ export default function ConciergerieDashboardPage() {
 
   useEffect(() => {
     const loadData = async () => {
-      const supabase = createClient()
+      const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
+      const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      const headers = {
+        'apikey': key,
+        'Authorization': `Bearer ${key}`,
+        'Content-Type': 'application/json'
+      }
 
-      const { data } = await supabase
-        .from('requests')
-        .select(
-          `
-          *,
-          category:categories(*),
-          service:services(*),
-          player:profiles!requests_player_id_fkey(*)
-        `
-        )
-        .order('created_at', { ascending: false })
+      // Get requests with categories and services
+      const response = await fetch(
+        `${url}/rest/v1/requests?select=*,category:categories(*),service:services(*)&order=created_at.desc`,
+        { headers }
+      )
 
-      if (data) {
-        setRequests(data)
+      const data = await response.json()
+
+      if (response.ok && Array.isArray(data)) {
+        // Get unique player IDs
+        const playerIds = [...new Set(data.map((r: { player_id: string }) => r.player_id))]
+
+        let requestsWithPlayers = data
+
+        // Fetch profiles for these players
+        if (playerIds.length > 0) {
+          const profilesResponse = await fetch(
+            `${url}/rest/v1/profiles?select=*&id=in.(${playerIds.join(',')})`,
+            { headers }
+          )
+          const profiles = await profilesResponse.json()
+
+          // Map profiles by ID
+          const profilesMap = new Map(
+            (profiles || []).map((p: { id: string }) => [p.id, p])
+          )
+
+          // Attach player to each request
+          requestsWithPlayers = data.map((r: { player_id: string }) => ({
+            ...r,
+            player: profilesMap.get(r.player_id) || null
+          }))
+        }
+
+        setRequests(requestsWithPlayers as RequestWithDetails[])
 
         const today = new Date()
         today.setHours(0, 0, 0, 0)
 
         setStats({
-          total: data.length,
-          new: data.filter((r: RequestWithDetails) => r.status === 'new').length,
-          inProgress: data.filter((r: RequestWithDetails) => r.status === 'in_progress').length,
-          today: data.filter((r: RequestWithDetails) => new Date(r.created_at) >= today).length,
+          total: requestsWithPlayers.length,
+          new: requestsWithPlayers.filter((r: RequestWithDetails) => r.status === 'new').length,
+          inProgress: requestsWithPlayers.filter((r: RequestWithDetails) => r.status === 'in_progress').length,
+          today: requestsWithPlayers.filter((r: RequestWithDetails) => new Date(r.created_at) >= today).length,
         })
       }
 
