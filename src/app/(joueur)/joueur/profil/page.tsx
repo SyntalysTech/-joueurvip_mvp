@@ -91,7 +91,7 @@ export default function ProfilPage() {
           </div>
           <div>
             <h2 className="text-lg font-semibold text-[rgb(var(--color-text-primary))]">
-              {profile?.full_name || 'Joueur VIP'}
+              {profile?.full_name || 'Joueur'}
             </h2>
             <p className="text-sm text-[rgb(var(--color-text-tertiary))]">
               {user?.email}
@@ -144,7 +144,7 @@ export default function ProfilPage() {
         {/* Footer */}
         <div className="text-center pt-4">
           <p className="text-xs text-[rgb(var(--color-text-muted))]">
-            VIP Conciergerie
+            JoueurVIP
           </p>
           <p className="text-xs text-[rgb(var(--color-text-muted))]">
             Version 1.0.0

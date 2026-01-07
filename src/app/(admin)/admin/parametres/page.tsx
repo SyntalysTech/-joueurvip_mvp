@@ -152,7 +152,7 @@ export default function AdminParametresPage() {
       {/* Version */}
       <div className="mt-12 text-center">
         <p className="text-sm text-[rgb(var(--color-text-muted))]">
-          VIP Conciergerie · Version 1.0.0 · Admin
+          JoueurVIP · Version 1.0.0 · Admin
         </p>
       </div>
     </div>

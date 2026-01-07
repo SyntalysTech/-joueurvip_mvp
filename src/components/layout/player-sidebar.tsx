@@ -89,7 +89,7 @@ export function PlayerSidebar() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-[rgb(var(--color-text-primary))] truncate">
-              {profile?.full_name || 'Joueur VIP'}
+              {profile?.full_name || 'Joueur'}
             </p>
             <p className="text-xs text-[rgb(var(--color-text-muted))] truncate">
               {user?.email}
@@ -157,7 +157,7 @@ export function PlayerSidebar() {
       {/* Version */}
       <div className="px-6 py-3 border-t border-[rgb(var(--color-border-primary))]">
         <p className="text-xs text-[rgb(var(--color-text-muted))]">
-          VIP Conciergerie v1.0.0
+          JoueurVIP v1.0.0
         </p>
       </div>
     </aside>

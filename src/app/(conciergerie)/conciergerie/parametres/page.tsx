@@ -111,7 +111,7 @@ export default function ParametresPage() {
       {/* Version */}
       <div className="mt-12 text-center">
         <p className="text-sm text-[rgb(var(--color-text-muted))]">
-          VIP Conciergerie · Version 1.0.0
+          JoueurVIP · Version 1.0.0
         </p>
       </div>
     </div>

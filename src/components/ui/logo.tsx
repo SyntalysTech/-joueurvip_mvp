@@ -55,19 +55,14 @@ export function Logo({ size = 'md', showText = true, className }: LogoProps) {
 
       {/* Texto */}
       {showText && (
-        <div className="flex flex-col">
-          <span
-            className={cn(
-              'font-semibold tracking-tight text-[rgb(var(--color-text-primary))]',
-              text
-            )}
-          >
-            VIP
-          </span>
-          <span className="text-[10px] uppercase tracking-[0.2em] text-[rgb(var(--color-text-tertiary))] -mt-0.5">
-            Conciergerie
-          </span>
-        </div>
+        <span
+          className={cn(
+            'font-semibold tracking-tight text-[rgb(var(--color-text-primary))]',
+            text
+          )}
+        >
+          JoueurVIP
+        </span>
       )}
     </div>
   )

@@ -11,8 +11,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'VIP Conciergerie',
-  description: 'Plateforme privée de services VIP',
+  title: 'JoueurVIP',
+  description: 'Plateforme privée de services pour joueurs',
   robots: 'noindex, nofollow',
 }
 

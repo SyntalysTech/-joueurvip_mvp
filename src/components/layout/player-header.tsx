@@ -47,7 +47,7 @@ export function PlayerHeader({
               </h1>
             ) : (
               <span className="text-sm font-medium text-[rgb(var(--color-text-secondary))] lg:text-2xl lg:font-semibold lg:text-[rgb(var(--color-text-primary))]">
-                VIP Conciergerie
+                JoueurVIP
               </span>
             )}
           </div>
