@@ -14,6 +14,11 @@ export const metadata: Metadata = {
   title: 'JoueurVIP',
   description: 'Plateforme privée de services pour joueurs',
   robots: 'noindex, nofollow',
+  openGraph: {
+    title: 'JoueurVIP',
+    description: 'Plateforme privée de services pour joueurs',
+    type: 'website',
+  },
 }
 
 export const viewport: Viewport = {
