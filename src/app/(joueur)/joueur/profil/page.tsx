@@ -144,11 +144,16 @@ export default function ProfilPage() {
         {/* Footer */}
         <div className="text-center pt-4">
           <p className="text-xs text-[rgb(var(--color-text-muted))]">
-            JoueurVIP
+            JoueurVIP · v1.0.0
           </p>
-          <p className="text-xs text-[rgb(var(--color-text-muted))]">
-            Version 1.0.0
-          </p>
+          <a
+            href="https://syntalys.ch"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] text-[rgb(var(--color-text-muted))] hover:text-[rgb(var(--color-accent))] transition-colors"
+          >
+            by Syntalys Tech
+          </a>
         </div>
       </main>
     </>

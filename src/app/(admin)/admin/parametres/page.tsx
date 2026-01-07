@@ -152,8 +152,16 @@ export default function AdminParametresPage() {
       {/* Version */}
       <div className="mt-12 text-center">
         <p className="text-sm text-[rgb(var(--color-text-muted))]">
-          JoueurVIP · Version 1.0.0 · Admin
+          JoueurVIP · v1.0.0 · Admin
         </p>
+        <a
+          href="https://syntalys.ch"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-[rgb(var(--color-text-muted))] hover:text-[rgb(var(--color-accent))] transition-colors"
+        >
+          by Syntalys Tech
+        </a>
       </div>
     </div>
   )

@@ -94,6 +94,21 @@ export function ConciergeSidebar() {
           <span className="font-medium">Déconnexion</span>
         </button>
       </div>
+
+      {/* Version */}
+      <div className="px-6 py-3 border-t border-[rgb(var(--color-border-primary))]">
+        <p className="text-xs text-[rgb(var(--color-text-muted))]">
+          JoueurVIP v1.0.0
+        </p>
+        <a
+          href="https://syntalys.ch"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[10px] text-[rgb(var(--color-text-muted))] hover:text-[rgb(var(--color-accent))] transition-colors"
+        >
+          by Syntalys Tech
+        </a>
+      </div>
     </aside>
   )
 }
