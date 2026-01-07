@@ -40,17 +40,16 @@ function DemandesContent() {
       try {
         const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
         const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        const headers = {
+          'apikey': key,
+          'Authorization': `Bearer ${key}`,
+          'Content-Type': 'application/json'
+        }
 
-        // Using fetch directly to bypass SDK issues
+        // Get requests with categories and services
         const response = await fetch(
-          `${url}/rest/v1/requests?select=*,category:categories(*),service:services(*),player:profiles!requests_player_id_fkey(*)&order=created_at.desc`,
-          {
-            headers: {
-              'apikey': key,
-              'Authorization': `Bearer ${key}`,
-              'Content-Type': 'application/json'
-            }
-          }
+          `${url}/rest/v1/requests?select=*,category:categories(*),service:services(*)&order=created_at.desc`,
+          { headers }
         )
 
         console.log('DemandesPage: Fetch completed, status:', response.status)
@@ -58,8 +57,33 @@ function DemandesContent() {
         const data = await response.json()
         console.log('DemandesPage: Data:', data)
 
-        if (response.ok) {
-          setRequests(data as RequestWithDetails[])
+        if (response.ok && Array.isArray(data)) {
+          // Get unique player IDs
+          const playerIds = [...new Set(data.map((r: { player_id: string }) => r.player_id))]
+
+          // Fetch profiles for these players
+          if (playerIds.length > 0) {
+            const profilesResponse = await fetch(
+              `${url}/rest/v1/profiles?select=*&id=in.(${playerIds.join(',')})`,
+              { headers }
+            )
+            const profiles = await profilesResponse.json()
+
+            // Map profiles by ID
+            const profilesMap = new Map(
+              (profiles || []).map((p: { id: string }) => [p.id, p])
+            )
+
+            // Attach player to each request
+            const requestsWithPlayers = data.map((r: { player_id: string }) => ({
+              ...r,
+              player: profilesMap.get(r.player_id) || null
+            }))
+
+            setRequests(requestsWithPlayers as RequestWithDetails[])
+          } else {
+            setRequests(data as RequestWithDetails[])
+          }
         } else {
           console.error('Error loading requests:', data)
         }
